@@ -12,7 +12,7 @@ from kivy.clock import Clock
 from kivy.lang.builder import Builder
 
 from chaineCommunication import myArduino
-from time import sleep
+from time import sleep, time
 from datetime import datetime
 from serial.serialutil import SerialException, Timeout
 from serial.tools.list_ports_windows import comports
@@ -24,6 +24,7 @@ class mainLayout(BoxLayout):
     def __init__(self, **kwargs):
         super(mainLayout, self).__init__(**kwargs)
         self.orientation = 'vertical'
+        Clock.schedule_interval(self.showTime, 1)
     #connextion variables:
         self.uno = None
         self.port = "COM6"
@@ -43,12 +44,10 @@ class mainLayout(BoxLayout):
     #information vatiables
         self.counters = [self.ids.redCounter, self.ids.greenCounter, self.ids.blueCounter]
         self.counts = [0, 0, 0]
-    def getTime(self, date = False):
+
+    def getTime(self, date = False, time = True):
         now = datetime.now()
-        if(date):
-            return now
-        else:
-            return now.strftime("%H:%M:%S")
+        return date * now.strftime("%d/%m/%Y") + (date and time) * " " + time * now.strftime("%H:%M:%S")
 
 
     def setPort(self, value):
@@ -179,6 +178,13 @@ class mainLayout(BoxLayout):
         for i in range(3):
             self.counters[i].text = str(self.counts[i])
 
+    def showTime(self, *args):
+        time = self.getTime()
+        self.ids.timeLabel.text = time
+        if time == "00:00:00":
+            date = self.getTime(date = True, time = False)
+            self.ids.dateLabel.text = date
+        
 
     def handleConnexionError(self):
         self.updateHistory("Connexion Error!")
