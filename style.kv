@@ -1,0 +1,246 @@
+
+#:set blue (25/255, 25/255, 204/255, 1)
+#:set lightBlue (74/255, 199/255, 255/255, 1)
+#:set red (250/255, 37/255, 37/255, 1)
+#:set green (37/255, 250/255, 37/255, 1)
+
+#:set dark (42/255, 44/255, 75/255, 1)
+#:set light (237/255, 242/255, 244/255, 1)
+#:set gray (141/255, 153/255, 174/255, 1)
+
+#:set black (0, 0, 0, 1)
+#:set white (1, 1, 1, 1)
+
+
+<Button>:
+    background_normal : ''
+    background_color: blue
+
+<mainLayout>:
+    BoxLayout:
+        padding: 20, 10, 20, 10
+        spacing: 5
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: light
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        GridLayout:
+            cols: 3
+            spacing: 20
+            size_hint: (1, .25)
+            Spinner:
+                id: ports
+                text: 'Select a port'
+                values: []
+                on_text: root.setPort(self.text)
+                color: light
+                background_color: dark
+                
+            Button:
+                id: connectButton
+                text: 'Connect'
+                backround_color: blue
+                on_release: root.connectPort(self) 
+                
+            Button:
+                id: startButton
+                text: 'Start'
+                disabled: True
+                background_color: green
+                on_release: root.start(self)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, 1
+            spacing: 10
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: 5
+                padding: 10
+                canvas.before:
+                    Color:
+                        rgba: black
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                GridLayout:
+                    cols: 1
+                    spacing: 5
+                    Spinner:
+                        id: mode
+                        text: "Sellect a mode"
+                        values: ["Blink", "Fade", "Controlled"]
+                        color: (0, 0, 0, 1)
+                        background_color: light
+                        font_size: 20
+                        on_text: root.setMode(self.text)
+                    
+                    Label:
+                        id: speedLabel
+                        text: "Speed: 4"
+                        text_size: self.size
+                        color: light
+
+                    BoxLayout:
+                        padding: 5, 0, 5, 0
+                        Label:
+                            text: "1"
+                            font_size: 20
+                            size_hint: None, 1
+                            width: 30
+                            color: green
+                        Slider:
+                            id: speedSlider
+                            orientation: "horizontal"
+                            min: 1
+                            max: 10
+                            value: 4
+                            step: 1
+                            on_value: root.setSpeed(self.value)
+                        Label:
+                            text: "10"
+                            font_size: 20
+                            size_hint: None, 1
+                            width: 30
+                            color: green
+
+                GridLayout:
+                    cols: 2
+                    spacing: 10
+                    padding: 20, 0
+                    Label:
+                        text: 'Red led:'
+                        text_size: self.size
+                        valign: 'center'
+                    Switch:
+                        id: redSwitch
+                        active: True
+                        on_active: root.switchLed(0)
+
+                    Label:
+                        text: 'Green led:'
+                        text_size: self.size
+                        valign: 'center'
+                    Switch:
+                        id: greenSwitch
+                        active: False
+                        on_active: root.switchLed(1)
+
+                    Label:
+                        text: 'Blue led:'
+                        text_size: self.size
+                        valign: 'center'
+                    Switch:
+                        id: blueSwitch
+                        active: False
+                        on_active: root.switchLed(2)
+
+                Button:
+                    id: updateButton
+                    disabled: True
+                    text: 'Update'
+                    size_hint: 1, .3
+                    on_release: root.update()
+            
+            BoxLayout:
+                orientation: 'vertical'
+                padding: 10
+                Label:
+                    canvas.before:
+                        Color:
+                            rgba: light
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    color: black
+                    size_hint: 1, None
+                    height: 40
+                    text: 'History'
+                    font_size: 20
+
+                RecycleView:
+                    id: History
+                    canvas.before:
+                        Color:
+                            rgba: black
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    cols: 2
+                    viewclass: 'Label'
+                    space_x: self.size[0]/3
+                    RecycleGridLayout:
+                        color: light
+                        default_size: None, dp(35)
+                        default_size_hint: 1, None
+                        size_hint_y: None
+                        height: self.minimum_height
+                        cols: 1
+                        orientation: 'rl-bt'      
+
+        GridLayout:
+            cols: 3
+            size_hint: 1, .5
+            padding: 0, 10
+            spacing: 20
+            Label:
+                id: redCounter
+                text: "0"
+                background_color: (.8, .1, .1, 1)
+                font_size: 30
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+            Label:
+                id: greenCounter
+                text: "0"
+                background_color: (.1, .8, .1, .5)
+                font_size: 30
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                
+
+            Label:
+                id: blueCounter
+                text: "0"
+                background_color: (.1, .1, .8, .5)
+                font_size: 30
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+    GridLayout:
+        id: msgHolder
+        background_color: (0, 0, 0, 1)
+        canvas.before:
+            Color:
+                rgba: self.background_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 2
+        size_hint: (1, None)
+        height: 40
+
+        Label:
+            id: msgBox
+            text: ""
+        Label:
+            id: DateTime
+            text: "13:12"
+           
+            
