@@ -3,7 +3,7 @@ In this repository you will find:
 - syle.kv (kivy language file for GUI styling)
 - interface.ino (arduino c++ code)
 
-By uploading interface.ino to arduino using arduino IDE and running interface.py using an interpreter that has kivy library installed, you should be able to control the arduino from the GUI.
+By uploading interface.ino to arduino using arduino IDE where you should install TimerOne library (https://github.com/PaulStoffregen/TimerOne) and running interface.py using an interpreter that has kivy library installed, you should be able to control the arduino from the GUI through USB serial communication.
 
 (I'll add more explanations about how the communicaition works in details later)
 
