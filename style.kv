@@ -232,15 +232,20 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-        cols: 2
+        cols: 3
         size_hint: (1, None)
         height: 40
 
         Label:
             id: msgBox
             text: ""
+            size_hint_x: .5 
+
         Label:
-            id: DateTime
-            text: "13:12"
-           
-            
+            id: dateLabel
+            text: root.getTime(date = True, time = False)
+            size_hint_x: .3
+
+        Label:
+            id: timeLabel
+            size_hint_x: .2
