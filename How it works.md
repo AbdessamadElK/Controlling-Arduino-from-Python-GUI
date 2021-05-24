@@ -13,4 +13,6 @@ By uploading interface.ino to arduino using arduino IDE where you should install
   
   Reading serial data and controlling leds at the same time is possible thanks to TimerOne library which allows us to execute a function repeatedly, I used it to read one character from Serial and concatenate it to Request variable which holds the $-x-x-...-x& request. This function ignores "C" characters that may be sent to establish connexion at the beginning and to set the flag to true when it reads a & varibale. So that the next time the loop starts the flag block will be executed. The later stops TimerOne from reading to request varibale so that it can, depending on the first character (& or *), parse the right variables. Fianlly the flag is set to false after restarting TimerOne.
   
+Note: TimerOne library uses digital pins 9 and 10 so you can't use them.
+  
   The interface also reads from serial each 100 ms and takes a decision: sending "C" for connexion establishing, showing that connextion has been established when receiving "C1" and updating counters when receiving $x-x-x&. It also sends start/stop and configuration requests.
